@@ -1,0 +1,19 @@
+preprocessing:
+  classes:
+  - toxic
+  - severe_toxic
+  - obscene
+  - threat
+  - insult
+  - identity_hate
+  dir_testdata: ./data/test_mini.csv
+  dir_traindata: ./data/train_mini.csv
+  prep_method: tfidf
+  random_seed: 2021
+  tfidf_params:
+    max_df: 0.1
+    min_df: 50
+output_dir: ./submission/
+training:
+  model_name: naivebayes
+  model_version: v1

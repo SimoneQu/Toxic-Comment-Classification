@@ -1,0 +1,8 @@
+preprocessing:
+  prep_method: 'tfidf'
+  tfidf_params:
+    min_df: 50
+    max_df: 0.1
+training:
+  model_name: 'naivebayes'
+  model_version: 'v1'
