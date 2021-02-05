@@ -28,6 +28,12 @@ class NaiveBayes(object):
         df_pred = pd.DataFrame(data=pred)
         return df_pred
 
+    def fit_and_validate(self, train_x, train_y, validate_x, validate_y):
+        self.fit(train_x, train_y)
+        pred = self.predict(validate_x)
+        history = None
+        return pred, history
+
     def score(self, X, Y):
         scores = dict()
         for col, clf in self.models.items():

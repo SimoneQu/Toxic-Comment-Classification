@@ -1,0 +1,9 @@
+model_name: 'rnn'
+model_version: 'v2'
+preprocessing:
+  prep_method: 'nn_vectorization'
+nn_params:
+  token_num_words: 5000
+  sentence_maxlen: 200
+  embedding_dim: 64
+  epochs: 3

@@ -1,6 +1,7 @@
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from module.model.naivebayes import NaiveBayes
+from module.model.rnn import RNN
 
 class Trainer(object):
     def __init__(self, config, logger, classes):
@@ -12,6 +13,8 @@ class Trainer(object):
     def _model_init(self):
         if self.config['model_name'] == 'naivebayes':
             self.model = NaiveBayes(self.classes)
+        elif self.config['model_name'] == 'rnn':
+            self.model = RNN(self.classes, self.config['nn_params'])
         else:
             self.logger.warning("Model Type:{} is not support yet".format(self.config['model_name']))
 
@@ -19,13 +22,16 @@ class Trainer(object):
         self.model.fit(train_x, train_y)
         return self.model
 
-    def validate(self, validate_x, validate_y):
-        pred = self.model.predict(validate_x)
-        accuracy = accuracy_score(validate_y, pred)
-        cls_report = classification_report(validate_y, pred, zero_division=1)
+    def metrics(self, predictions, labels):
+        accuracy = accuracy_score(labels, predictions)
+        cls_report = classification_report(labels, predictions, zero_division=1)
         return accuracy, cls_report
 
+    def validate(self, validate_x, validate_y):
+        pred = self.model.predict(validate_x)
+        return self.metrics(pred, validate_y)
+
     def fit_and_validate(self, train_x, train_y, validate_x, validate_y):
-        _ = self.model.fit(train_x, train_y)
-        accuracy, cls_report = self.validate(validate_x, validate_y)
-        return self.model, accuracy, cls_report
+        pred, history = self.model.fit_and_validate(train_x, train_y, validate_x, validate_y)
+        accuracy, cls_report = self.metrics(pred, validate_y)
+        return self.model, accuracy, cls_report, history
