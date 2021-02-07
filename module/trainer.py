@@ -4,17 +4,19 @@ from module.model.naivebayes import NaiveBayes
 from module.model.rnn import RNN
 
 class Trainer(object):
-    def __init__(self, config, logger, classes):
+    def __init__(self, config, logger, classes, vocab_size, embedding_matrix):
         self.config = config
         self.logger = logger
         self.classes = classes
+        self.vocab_size = vocab_size
+        self.embedding_matrix = embedding_matrix
         self._model_init()
 
     def _model_init(self):
         if self.config['model_name'] == 'naivebayes':
             self.model = NaiveBayes(self.classes)
         elif self.config['model_name'] == 'rnn':
-            self.model = RNN(self.classes, self.config['nn_params'])
+            self.model = RNN(self.classes, self.vocab_size, self.embedding_matrix, self.config['nn_params'], self.logger)
         else:
             self.logger.warning("Model Type:{} is not support yet".format(self.config['model_name']))
 

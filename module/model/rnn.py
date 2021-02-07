@@ -2,27 +2,45 @@ import tensorflow as tf
 import pandas as pd
 
 class RNN(object):
-    def __init__(self, classes, params):
+    def __init__(self, classes, vocab_size, embedding_matrix, params, logger):
+        self.logger = logger
         self.params = params
         self.classes = classes
+        self.vocab_size = vocab_size
+        self.embedding_matrix = embedding_matrix
         self.model = self._build()
 
     def _build(self):
-        model = tf.keras.Sequential([
-            tf.keras.layers.Embedding(
-                input_dim=self.params['token_num_words'],
-                output_dim=self.params['embedding_dim'],
-                input_length=self.params['sentence_maxlen'],
-            ),
-            tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
-            tf.keras.layers.Dropout(0.5),
-            tf.keras.layers.Dense(64, activation='relu'),
-            tf.keras.layers.Dense(len(self.classes), activation='sigmoid')
-        ])
+        if self.embedding_matrix is not None:
+            model = tf.keras.Sequential([
+                tf.keras.layers.Embedding(
+                    input_dim=self.vocab_size,
+                    output_dim=self.params['embedding_dim'],
+                    input_length=self.params['sentence_maxlen'],
+                    weights=[self.embedding_matrix],
+                    trainable=True
+                ),
+                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
+                tf.keras.layers.Dropout(0.5),
+                tf.keras.layers.Dense(64, activation='relu'),
+                tf.keras.layers.Dense(len(self.classes), activation='sigmoid')
+            ])
+        else:
+            model = tf.keras.Sequential([
+                tf.keras.layers.Embedding(
+                    input_dim=self.vocab_size,
+                    output_dim=self.params['embedding_dim'],
+                    input_length=self.params['sentence_maxlen'],
+                ),
+                tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
+                tf.keras.layers.Dropout(0.5),
+                tf.keras.layers.Dense(64, activation='relu'),
+                tf.keras.layers.Dense(len(self.classes), activation='sigmoid')
+            ])
         model.compile(
             optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
         )
-        model.summary()
+        self.logger.info(model.summary())
         return model
 
     def fit(self, X_train, Y_train):

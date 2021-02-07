@@ -1,9 +1,10 @@
 model_name: 'rnn'
-model_version: 'v2'
+model_version: 'glove_v1'
 preprocessing:
   prep_method: 'nn_vectorization'
 nn_params:
   token_num_words: 5000
   sentence_maxlen: 200
-  embedding_dim: 64
-  epochs: 3
+  embedding_dim: 50
+  pretrained_embedding: "glove-twitter-50"
+  epochs: 2

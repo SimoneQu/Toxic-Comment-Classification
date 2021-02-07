@@ -6,15 +6,16 @@ preprocessing:
   - threat
   - insult
   - identity_hate
-  dir_testdata: ./data/test.csv
-  dir_traindata: ./data/train.csv
+  dir_testdata: ./data/test_mini.csv
+  dir_traindata: ./data/train_mini.csv
   prep_method: nn_vectorization
   random_seed: 2021
 output_dir: ./submission/
 model_name: rnn
-model_version: v2
+model_version: glove_v1
 nn_params:
-  embedding_dim: 64
-  epochs: 3
+  embedding_dim: 50
+  epochs: 2
+  pretrained_embedding: glove-twitter-50
   sentence_maxlen: 200
   token_num_words: 5000

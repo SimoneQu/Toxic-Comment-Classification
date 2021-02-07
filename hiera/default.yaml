@@ -1,6 +1,6 @@
 preprocessing:
-  dir_traindata: './data/train.csv'
-  dir_testdata: './data/test.csv'
+  dir_traindata: './data/train_mini.csv'
+  dir_testdata: './data/test_mini.csv'
   random_seed : 2021
   classes: ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 
